@@ -1,13 +1,17 @@
-# Masayoshi Nakamura - Portfolio (November 2025)
+# Masayoshi Nakamura - Portfolio (December 2025)
 
 ## 1\. Introduction
 
-I design and build **scalable, automated, cloud-native applications**.
+Developed a full‑stack GenAI chatbot platform featuring **RAG + TTS with real‑time WebSocket streaming**.
 
-This repository is my portfolio, centered on a GenAI RAG API. This project showcases the full application lifecycle: a modern GenAI stack (Bedrock, LangChain), infrastructure provisioned as code (AWS CDK), and a complete, automated CI/CD pipeline (GitHub Actions).
+Backend (FastAPI + kokoro_onnx) runs on AWS ECS Fargate, while the React frontend is deployed on S3 + CloudFront. 
 
-  * **Application Repo:** `github.com/masayang/langchain-rag-project` (Private)
-  * **Infrastructure Repo:** `github.com/masayang/aws-cdk-infra` (Private)
+Both pipelines are fully automated through GitHub Actions (test, build, ECR/ECS or S3/CDN deploy) enabling seamless GitOps‑style delivery.
+
+
+  * **Backend Repo:** `https://github.com/masayang/tts-service` (Private)
+  * **Frontend Repo:** `https://github.com/masayang/tts_frontend` (Private)
+  * **Infrastructure Repo:** `https://github.com/masayang/aws_cdk_tokyo` (Private)
 
 ## 2\. Core Competencies
 
@@ -19,25 +23,38 @@ This repository is my portfolio, centered on a GenAI RAG API. This project showc
 
 -----
 
-## 3\. Project (1): GenAI RAG Chatbot API
+## 3\. Project (1): Real-time Voice Chatbot API (RAG + TTS)
 
-This is a RAG (Retrieval-Augmented Generation) API backend that answers questions about the U.S. Constitution.
+This project evolves the original RAG chatbot backend into a **real-time, voice-enabled GenAI chatbot** that streams both text and generated speech to the user.
 
-### Architecture (Modern Serverless Stack)
+### Architecture Overview
 
-This project uses a modern, **GPU-less architecture** that eliminates heavy `torch` dependencies and the need for local GPU management. The design is lightweight and relies entirely on scalable, serverless cloud APIs.
+A fully serverless, cloud-native implementation that combines **retrieval-augmented reasoning** with **CPU-optimized text-to-speech synthesis**.
 
-  * **LLM:** Amazon Bedrock (Anthropic Claude 3.5 Sonnet)
-  * **Embedding:** Amazon Bedrock (Amazon Titan Embeddings V2)
-  * **Vector DB:** Chroma Cloud (A fully-managed, multi-tenant vector database)
-  * **Orchestration:** LangChain (LCEL for chaining retrievers and prompts)
-  * **API:** FastAPI (Containerized with Docker)
+- **Language Model**: Amazon Bedrock – *Claude 3.5 Sonnet*
+- **Embeddings**: Amazon Bedrock – *Amazon Titan Embeddings V2*
+- **Vector Store**: *Chroma Cloud* (managed, multi-tenant)
+- **Framework / Orchestration**: *FastAPI + LangChain (LCEL)*
+- **TTS Backend**: *kokoro_onnx* (CPU-only, no GPU dependencies)
+- **Audio Format**: WAV (streamed via WebSocket in real time)
+- **Frontend**: *React SPA*, receives and plays streaming audio
+- **Hosting**: AWS ECS (Fargate) in Tokyo region (ap-northeast-1)
 
-### CI/CD (Quality Assurance)
+### Real-time Streaming
+Claude’s generated text is incrementally converted to speech and streamed back over WebSocket with minimal latency.
 
-  * On every `git push`, a GitHub Actions workflow automatically runs `pytest` **Unit Tests**.
-  * Builds that pass testing are containerized and automatically pushed as a new image to **Amazon ECR**.
-  * (Future Work: Adding Integration and E2E tests.)
+Even on a constrained **1 vCPU / 1 GB memory** environment, the ONNX-based TTS pipeline maintains responsive, low-latency interaction.
+
+### CI/CD & Deployment
+
+- On every git push, **GitHub Actions** runs unit tests, builds a container, and pushes it to **Amazon ECR**.
+- **ECS** automatically detects the new image and performs a rolling update with zero downtime.
+This setup enables a complete **GitOps-style workflow** for continuous delivery of both the RAG and TTS services.
+
+### Future Enhancements
+- Audio result caching and reuse (e.g., S3-based audio store).
+- Real-time speech input (voice-to-text) support.
+- Integration testing for WebSocket streaming in CI/CD.
 
 -----
 
