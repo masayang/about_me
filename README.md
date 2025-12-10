@@ -97,25 +97,13 @@ This setup enables a true **GitOps workflow**: developers simply push code, and 
 
 -----
 
-## 6\. Example Usage
+## 6\. The actual app
 
-### API Request (curl)
+https://chat.optionm8.com/
 
-```bash
-# POST a question to the API Gateway endpoint
-curl -X POST "http://portfolio.optionm8.com/chat" \
--H "Content-Type: application/json" \
--d '{
-    "question": "What is judicial power? Which article and section is it in?"
-}'
-```
+1. Click or tap "enable_audio" button first.
+2. Enter your query, then tap "Send"
+3. The audio will start automatically.
+4. Please don't take the output seriously.
 
-### API Response (JSON)
-
-```json
-{
-  "answer": "According to the context, judicial power is vested in one Supreme Court and in such inferior Courts as the Congress may from time to time ordain and establish. This is detailed in Article III, Section 1."
-}
-```
-
-![Postman example](./assets/postman_en.png)
+![Screenshot (EN)](./assets/screen_en.png)
