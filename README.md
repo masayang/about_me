@@ -1,109 +1,61 @@
-# Masayoshi Nakamura - Portfolio (December 2025)
+# Masayoshi Nakamura - Portfolio (July 2026)
 
-## 1\. Introduction
+## 1. Introduction
 
-Developed a full‑stack GenAI chatbot platform featuring **RAG + TTS with real‑time WebSocket streaming**.
+I specialize in **high-velocity, high-quality iterative development** powered by **Grok Build**.
 
-Backend (FastAPI + kokoro_onnx) runs on AWS ECS Fargate, while the React frontend is deployed on S3 + CloudFront. 
+Drawing on experience as a Scrum Product Owner and Scrum Master, I start each cycle by defining clear iteration goals and scope. Implementation follows **Test-Driven Development (TDD)**. When beneficial for GenAI features, I integrate **G-Eval** evaluations into CI/CD pipelines.
 
-Both pipelines are fully automated through GitHub Actions (test, build, ECR/ECS or S3/CDN deploy) enabling seamless GitOps‑style delivery.
+Deployment platforms are chosen pragmatically per project — AWS, Vercel, Railway, and others.
 
+To balance speed with deployment safety, all merges to the protected `main` (master) branch require explicit human review and approval. AI agents are intentionally restricted from directly pushing or merging to production branches.
 
-  * **Backend Repo:** `https://github.com/masayang/tts-service` (Private)
-  * **Frontend Repo:** `https://github.com/masayang/tts_frontend` (Private)
-  * **Infrastructure Repo:** `https://github.com/masayang/aws_cdk_tokyo` (Private)
+All currently live portfolio projects were developed end-to-end using Grok Build.
 
-## 2\. Core Competencies
+## 2. Core Competencies
 
-  * **Backend:** Python (FastAPI, LangChain)
-  * **Cloud & IaC:** AWS (ECS, Fargate, Bedrock, ECR, ALB), AWS CDK (Python)
-  * **CI/CD:** GitHub Actions (Unit Testing, Docker Builds, ECR Push, Deployment to ECS)
-  * **Database:** Chroma Cloud (Vector DB)
-  * **Other:** Docker, `uv` (Python Package Manager), Git
+- **AI-Assisted Iterative Development:** Grok Build (iteration planning, TDD-first workflows)
+- **Backend:** Python (FastAPI), JavaScript/TypeScript
+- **Frontend & CMS:** Sanity (headless CMS), Vercel-optimized web apps
+- **GenAI:** xAI API (TTS and conversational capabilities)
+- **CI/CD & Quality:** GitHub Actions with human gate on `main`, optional G-Eval integration
+- **Cloud & Platforms:** AWS (selective use of CDK/IaC), Vercel, Railway
+- **Practices:** Scrum, TDD, pragmatic Infrastructure as Code, GitOps with safety guardrails
+- **Tooling:** Docker, Git, modern Python/JS tooling
 
------
+## 3. Live Projects (All developed with Grok Build)
 
-## 3\. Project (1): Real-time Voice Chatbot API (RAG + TTS)
+### Project 1: Notion-like Blog Engine (Sanity + Vercel)
 
-This project evolves the original RAG chatbot backend into a **real-time, voice-enabled GenAI chatbot** that streams both text and generated speech to the user.
+A modern, Notion-inspired blog and content publishing platform.
 
-### Architecture Overview
+- **Sanity** serves as the flexible headless CMS for structured content management and real-time collaboration feel.
+- Frontend and hosting on **Vercel** for instant previews, edge deployment, and excellent DX.
+- Developed through planned iterations: Scrum-style goal setting → TDD implementation → human-reviewed merge to production.
+- Focus on clean UX, content flexibility, and fast release cycles.
 
-A fully serverless, cloud-native implementation that combines **retrieval-augmented reasoning** with **CPU-optimized text-to-speech synthesis**.
+- **Live:** https://blog.masanakamuraconsulting.com/
+- **Repo:** https://github.com/masayang/sanity-nextjs-blog (Private)
 
-- **Language Model**: Amazon Bedrock – *Claude 3.5 Sonnet*
-- **Embeddings**: Amazon Bedrock – *Amazon Titan Embeddings V2*
-- **Vector Store**: *Chroma Cloud* (managed, multi-tenant)
-- **Framework / Orchestration**: *FastAPI + LangChain (LCEL)*
-- **TTS Backend**: *kokoro_onnx* (CPU-only, no GPU dependencies)
-- **Audio Format**: WAV (streamed via WebSocket in real time)
-- **Frontend**: *React SPA*, receives and plays streaming audio
-- **Hosting**: AWS ECS (Fargate) in Tokyo region (ap-northeast-1)
+### Project 2: TTS Chatbot using xAI API
 
-### Real-time Streaming
-Claude’s generated text is incrementally converted to speech and streamed back over WebSocket with minimal latency.
+An interactive chatbot featuring high-quality text-to-speech powered by the **xAI API**.
 
-Even on a constrained **1 vCPU / 1 GB memory** environment, the ONNX-based TTS pipeline maintains responsive, low-latency interaction.
+- Natural conversation interface with voice output.
+- Built entirely with Grok Build-driven iterative development (planning → TDD → optional evaluation → deploy).
+- Deployed to a lightweight, fast-iteration platform (Vercel or Railway).
 
-### CI/CD & Deployment
+- **Live:** https://chatbot.masanakamuraconsulting.com/
+- **Repo:** https://github.com/masayang/chatbot-by-grok-build
 
-- On every git push, **GitHub Actions** runs unit tests, builds a container, and pushes it to **Amazon ECR**.
-- **ECS** automatically detects the new image and performs a rolling update with zero downtime.
-This setup enables a complete **GitOps-style workflow** for continuous delivery of both the RAG and TTS services.
+## 4. Development Approach
 
-### Future Enhancements
-- Audio result caching and reuse (e.g., S3-based audio store).
-- Real-time speech input (voice-to-text) support.
-- Integration testing for WebSocket streaming in CI/CD.
+- **Iteration Planning:** Apply Scrum PO/SM knowledge to create focused, valuable iteration plans before coding.
+- **Implementation:** Strict TDD for reliability and rapid feedback loops.
+- **GenAI Quality:** Selectively introduce G-Eval or similar automated evaluations into CI/CD.
+- **Safety First:** Protected `main` branch + mandatory human approval before any production deployment. Agents never merge directly.
+- **Platform Flexibility:** Choose the most suitable deployment target (AWS, Vercel, Railway, etc.) instead of being locked into one stack.
 
------
+## Archived Work
 
-## 4\. Project (2): Application Infrastructure Platform
-
-This is the AWS infrastructure, built from scratch, to host the RAG Chatbot API.
-
-### Infrastructure as Code (IaC)
-
-The entire infrastructure is provisioned using the **AWS CDK (Python)**, ensuring a reproducible, version-controlled, and automated environment.
-
-  * **Infrastructure:** VPC, Subnets, Security Groups
-  * **Execution Environment:** **Fargate ECS** for container orchestration + **API Gateway** for the HTTP endpoint.
-  * **Region:** Tokyo (ap-northeast-1)
-
-### Key Features & Future Work
-
-  * **Cost Optimization:** The dev/demo environment **intentionally omits the NAT Gateway**, saving \~$30/month per VPC.
-  * **Automated Safeguards:** The CI/CD pipeline blocks any infrastructure deployment that fails its `pytest` CDK unit tests.
-  * **Future Work:** Planning to implement distinct Staging/Production environments and a Blue/Green deployment strategy.
-
------
-
-## 5\. The Core: Automated Deployment Pipeline
-
-The heart of this portfolio is the automated deployment pipeline that **connects the App and Infra repositories**.
-
-![CI/CD Pipeline](./assets/diagram.png)
-
-1.  **[App Repo]** A developer runs `git push`.
-2.  **[App Repo / GitHub Actions]**
-    1.  Run Unit Tests.
-    2.  Build the Docker image.
-    3.  Push the new image to Amazon ECR.
-3.  **[ECR -\> ECS Integration]**
-    1.  The push to ECR automatically **triggers an ECS service update**.
-    2.  The **ECS service** detects the new image and performs a **rolling update**, replacing the old tasks with the new version without downtime.
-
-This setup enables a true **GitOps workflow**: developers simply push code, and the automated pipeline handles testing, building, and deploying to the cluster without manual intervention.
-
------
-
-## 6\. The actual app
-
-https://chat.optionm8.com/
-
-1. Click or tap "enable_audio" button first.
-2. Enter your query, then tap "Send"
-3. The audio will start automatically.
-4. Please don't take the output seriously.
-
-![Screenshot (EN)](./assets/screen_en.png)
+The previous RAG API platform (Bedrock + LangChain, hosted via AWS CDK IaC with GitHub Actions CI/CD) and its demo system have been retired. Source code and related diagrams have been archived.

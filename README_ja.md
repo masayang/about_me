@@ -1,104 +1,61 @@
-# Masayoshi Nakamura ポートフォリオ (2025年11月)
+# Masayoshi Nakamura ポートフォリオ (2026年7月)
 
-## 1\. はじめに
+## 1. はじめに
 
-**スケーラブルで自動化されたクラウドネイティブ・アプリケーション**の設計・構築に取り組んでいます。
+**Grok Buildを活用した高速かつ高品質な反復的開発**に注力しています。
 
-このリポジトリは、私が作成したプロジェクトの概要をまとめたポートフォリオです。中心となるプロジェクトは、**モダンなGenAIスタック（Bedrock, LangChain）で構築したRAG API**と、それを**AWS CDKによるIaC**でホストし、**GitHub ActionsでCI/CDを組んだ**プラットフォームです。
+Scrum Product Owner / Scrum Masterとしての経験を活かし、各イテレーションの開始時に明確な目標とスコープを策定します。実装は**TDD (Test-Driven Development)** に基づいて進め、GenAI機能の品質が必要な場合は **G-Eval** 評価をCI/CDパイプラインに組み込みます。
 
-  * **App Repo:** `github.com/masayang/langchain-rag-project` (Private)
-  * **Infra Repo:** `github.com/masayang/aws-cdk-infra` (Private)
+デプロイ先はプロジェクトの特性に応じて AWS、Vercel、Railway などから柔軟に選択します。
 
-## 2\. スキルハイライト
+開発速度とデプロイ事故防止を両立させるため、`main`（master）ブランチへのマージは必ず人間がレビュー・承認する仕組みを作り込んでいます。AIエージェントが本番ブランチに直接書き込みやマージを行うことはありません。
 
-  * **バックエンド:** Python (FastAPI, LangChain)
-  * **クラウド & IaC:** AWS (ECS, Fargate, Bedrock, ECR, ALB), AWS CDK (Python)
-  * **CI/CD:** GitHub Actions (Unit Test, Docker Build, ECR Push, ECS Deploy)
-  * **データベース:** Chroma Cloud (Vector DB)
-  * **その他:** Docker, `uv` (Python Package Manager), Git
+以下に記載する現在稼働中のポートフォリオは、すべて **Grok Build** で開発したものです。
 
------
+## 2. スキルハイライト
 
-## 3\. プロジェクト (1): 生成AI RAGチャットボット API
+- **AI支援の反復開発:** Grok Build（イテレーション計画、TDD中心のワークフロー）
+- **バックエンド:** Python (FastAPI/Flask)
+- **フロントエンド & CMS:** Sanity（ヘッドレスCMS）、Vercel最適化ウェブアプリ React Next.js
+- **GenAI:** xAI API（TTS・会話機能）
+- **CI/CD & 品質:** GitHub Actions（mainブランチは人間ゲート）、必要に応じてG-Eval統合
+- **クラウド & プラットフォーム:** AWS（選択的なCDK/IaC利用）、Vercel、Railway
+- **プラクティス:** Scrum、TDD、実践的なIaC、安全ガード付きGitOps
+- **ツール:** Docker、Git、モダンなPython/JSツール群
 
-米国憲法に関する質問に回答する、RAG (Retrieval-Augmented Generation) APIバックエンドです。
+## 3. 現在稼働中のプロジェクト（すべてGrok Buildで開発）
 
-### アーキテクチャ (モダンなサーバーレス構成)
+### プロジェクト (1): Sanity + Vercel を使用したNotion風ブログエンジン
 
-ローカルでのGPU管理や`torch`依存を完全に排除し、スケーラブルなクラウドAPIで完結する設計を採用しました。
+Notionを想起させるモダンなブログ・コンテンツ配信プラットフォームです。
 
-  * **LLM:** Amazon Bedrock (Anthropic Claude 3.5 Sonnet)
-  * **Embedding:** Amazon Bedrock (Amazon Titan Embeddings V2)
-  * **Vector DB:** Chroma Cloud (フルマネージドのマルチテナントVector DB)
-  * **Orchestration:** LangChain (LCELによるRetrieverとPromptのチェイン)
-  * **API:** FastAPI (Dockerコンテナ化)
+- **Sanity** をヘッドレスCMSとして活用し、柔軟で構造化されたコンテンツ管理を実現。
+- **Vercel** にデプロイし、即時プレビュー・エッジ配信・優れた開発体験を提供。
+- Scrumの考え方を用いたイテレーション計画 → TDD実装 → 人間レビューによる本番マージ、という流れで開発。
+- クリーンなUX、コンテンツの柔軟性、高速なリリースサイクルを重視。
 
-### CI/CD (GitHub Actionsによる品質担保)
+**ライブ:** [URLを追加]  
+**リポジトリ:** [必要に応じて記載]
 
-  * `git push` をトリガーに、`pytest`による**Unit Test**が自動実行されます。
-  * テストをパスしたフィーチャーブランチ（または`main`）のみ、Dockerイメージがビルドされ、**Amazon ECR**に自動でプッシュされます。
-  * （計画中: Integration Test, E2Eテストの追加）
+### プロジェクト (2): xAI API を使用したTTS Chatbot
 
------
+**xAI API** を活用した高品質な音声合成（TTS）機能を備えたインタラクティブなチャットボットです。
 
-## 4\. プロジェクト (2): アプリケーション・プラットフォーム
+- 自然な会話インターフェースと音声出力の組み合わせ。
+- Grok Buildによる反復開発ループ（計画 → TDD → 任意評価 → デプロイ）をフル活用して構築。
+- 高速イテレーションに適した軽量プラットフォーム（Vercel または Railway）にデプロイ。
 
-上記「RAGチャットボットAPI」をホストするための、AWSインフラストラクチャです。
+**ライブ:** [URLを追加]  
+**リポジトリ:** [必要に応じて記載]
 
-### 構成 (AWS CDKによるInfrastructure as Code)
+## 4. 開発アプローチ
 
-**AWS CDK (Python)** を使用し、インフラ構成をコード化することで、再現性の高い環境構築を実現しました。
+- **イテレーション計画:** Scrum PO/SMの知見を活かし、価値の高いイテレーション計画をコード着手前に策定。
+- **実装:** TDDを徹底し、信頼性と素早いフィードバックを両立。
+- **GenAI品質:** 出力品質が重要な場面ではG-Evalなどの自動評価をCI/CDに選択的に導入。
+- **安全性の確保:** `main` ブランチを保護し、人間による明示的な承認を必須化。エージェントが直接本番に触れない運用。
+- **プラットフォームの柔軟性:** 単一スタックに縛られず、プロジェクトに最適なデプロイ先（AWS / Vercel / Railway など）を選択。
 
-  * **インフラ:** VPC, Subnet, Security Group
-  * **実行環境:** Fargate ECS (コンテナ実行) + ALB (APIエンドポイント)
-  * **リージョン:** Tokyo Region
+## アーカイブした取り組み
 
-### 工夫点と将来の展望
-
-  * **コスト意識:** 開発デモ環境では、コストのかかる**NAT Gatewayを意図的に省略**し、月額約$30のコストを節約。
-  * **CI/CD:** CDKのUnit Test (`pytest`) が通らない限りデプロイできないCI/CDパイプラインを構築。
-  * **将来の展望:** Staging/Production環境の構築、Blue/Greenデプロイメントの実装を計画中。
-
------
-
-## 5\. 連携: 2つのリポジトリによる自動デプロイ
-
-このポートフォリオの核心は、2つのPrivateリポジトリが連携して実現する**自動デプロイパイプライン**です。
-
-![CI/CD Pipeline](./assets/diagram.png)
-
-1.  **[App Repo]** 開発者が `git push`
-2.  **[App Repo / GitHub Actions]**
-    1.  Unit Test実行
-    2.  Dockerイメージをビルド
-    3.  Amazon ECRに新バージョンのイメージをプッシュ
-3.  **[ECR -\> ECS 連携]**
-    1.  ECRへのプッシュをトリガーし、**[Infra Repo]** 側のインフラ（ECS）に通知
-    2.  **ECSサービス**が新イメージを自動でプルし、タスクを入れ替える（ローリングアップデート）
-
-これにより、開発者は**コードを書くだけ**で、インフラを意識することなく本番環境（ECS）へのデプロイが完了します。
-
------
-
-## 6\. 実行例
-
-### APIへのリクエスト (curl)
-
-```bash
-# ALBのエンドポイントに対して質問をPOST
-curl -X POST "http://portfolio.optionm8.com/chat" \
--H "Content-Type: application/json" \
--d '{
-    "question": "連邦最高裁判所はなにをするの？"
-}'
-```
-
-### APIからのレスポンス (JSON)
-
-```json
-{
-  "answer": "連邦最高裁判所（Supreme Court）の役割は、提供されたテキストによると以下の通りです：\n\n1. 大使、公使、領事に関する全ての事件、および州が当事者となる事件において「原審管轄権」（original Jurisdiction）を持ちます。\n\n2. その他の前述の事件においては「上訴管轄権」（appellate Jurisdiction）を持ち、法律と事実の両方について、議会が定める例外や規則の下で判断を下します。\n\nつまり、連邦最高裁判所は特定の事件を最初から審理する権限と、下級裁判所からの上訴を受けて審理する権限を持つ司法機関です。これにより、アメリカ合衆国の司法制度において最終的な法的判断を下す役割を果たしています。"
-}
-```
-
-![Postman Screenshot](./assets/postman_ja.png)
+以前のRAG APIプラットフォーム（Bedrock + LangChain、AWS CDKによるIaC、GitHub Actions CI/CD）はデモシステムとともにリタイア済みです。ソースコードおよび関連ダイアグラムはアーカイブしています。
